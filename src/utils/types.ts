@@ -24,6 +24,7 @@ export interface History {
 
 export const historySummaryLabels = ['Avg Screen Time', 'Avg Sleep Duration', 'Avg Exercise', 'Avg Stress'] as const
 export type HistorySummaryLabel = typeof historySummaryLabels[number];
+export type StatLabel = keyof Stat | HistorySummaryLabel
 
 export interface Histories {
   'summary': {
@@ -31,4 +32,19 @@ export interface Histories {
     value: string
   }[],
   'history': History[]
+}
+
+export interface Friend {
+  name: string,
+  status: Stress,
+  time: string,
+  stressLevel: number,
+}
+
+export interface Socials {
+  'summary': {
+    label: 'Total Friends' | 'Refreshed' | 'Near-Burnout',
+    value: number
+  }[],
+  'friends': Friend[]
 }

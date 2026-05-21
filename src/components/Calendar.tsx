@@ -96,7 +96,11 @@ function createCalendarDays(monthDate: Date, events: CalendarEvent[]): CalendarD
   });
 }
 
-export default function Calendar({ addActivity }: { addActivity: () => void }) {
+type CalendarProps = {
+  addActivity: (date?: Date) => void,
+}
+
+export default function Calendar({ addActivity }: CalendarProps) {
   const [activeMonth, setActiveMonth] = useState(() => new Date());
 
   const events = createMonthEvents();
@@ -116,6 +120,7 @@ export default function Calendar({ addActivity }: { addActivity: () => void }) {
   }
 
   function handleDateClick(date: Date) {
+    addActivity(date)
     console.log({
       date,
       day: date.getDate(),
@@ -131,7 +136,7 @@ export default function Calendar({ addActivity }: { addActivity: () => void }) {
         <Button
           type="button"
           className="text-xs!"
-          onClick={addActivity}
+          onClick={() => addActivity()}
         >
           <FaPlus className="text-sm" />
           <span>Add Activity</span>

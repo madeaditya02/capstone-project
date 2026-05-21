@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiUser } from "react-icons/fi";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
+import { clearAuthSession } from "../utils/auth";
 
 const navLinks = [
   { label: "Dashboard", to: "/" },
@@ -11,6 +12,13 @@ const navLinks = [
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const navigate = useNavigate()
+
+  const logout = () => {
+    setIsUserMenuOpen(false)    
+    clearAuthSession();
+    return navigate('/auth');
+  }
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     [
@@ -58,7 +66,7 @@ export default function Navbar() {
                 <button
                   type="button"
                   className="block w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-100"
-                  onClick={() => setIsUserMenuOpen(false)}
+                  onClick={() => logout()}
                 >
                   Logout
                 </button>
@@ -106,7 +114,7 @@ export default function Navbar() {
             <button
               type="button"
               className="block w-full rounded-md px-3 py-2 text-left text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-950"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={() => logout()}
             >
               Logout
             </button>
