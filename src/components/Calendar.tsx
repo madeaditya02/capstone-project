@@ -2,9 +2,9 @@ import { useMemo, useState } from "react";
 import { FaArrowLeft, FaArrowRight, FaPlus } from "react-icons/fa6";
 import Button from "./Button";
 
-type MoodStatus = "Refreshed" | "Strained" | "Near-Burnout";
+export type MoodStatus = "Refreshed" | "Strained" | "Near-Burnout";
 
-type CalendarEvent = {
+export type CalendarEvent = {
   id: number;
   title: MoodStatus;
   start: Date;
@@ -41,43 +41,6 @@ function isDateBetween(date: Date, start: Date, end: Date) {
   return currentTime >= startTime && currentTime <= endTime;
 }
 
-function createMonthEvents(): CalendarEvent[] {
-  const month = new Date().getMonth();
-
-  return [
-    {
-      id: 1,
-      title: "Refreshed",
-      start: new Date(2026, month, 1),
-      end: new Date(2026, month, 3),
-    },
-    {
-      id: 2,
-      title: "Refreshed",
-      start: new Date(2026, month, 5),
-      end: new Date(2026, month, 6),
-    },
-    {
-      id: 3,
-      title: "Strained",
-      start: new Date(2026, month, 8),
-      end: new Date(2026, month, 10),
-    },
-    {
-      id: 4,
-      title: "Strained",
-      start: new Date(2026, month, 13),
-      end: new Date(2026, month, 15),
-    },
-    {
-      id: 5,
-      title: "Near-Burnout",
-      start: new Date(2026, month, 17),
-      end: new Date(2026, month, 18),
-    },
-  ];
-}
-
 function createCalendarDays(monthDate: Date, events: CalendarEvent[]): CalendarDay[] {
   const year = monthDate.getFullYear();
   const month = monthDate.getMonth();
@@ -98,12 +61,14 @@ function createCalendarDays(monthDate: Date, events: CalendarEvent[]): CalendarD
 
 type CalendarProps = {
   addActivity: (date?: Date) => void,
+  monthUpdated: (newMonth: Date) => void,
+  viewDay: (date: Date) => void,
+  events: CalendarEvent[],
 }
 
-export default function Calendar({ addActivity }: CalendarProps) {
+export default function Calendar({ addActivity, monthUpdated, events, viewDay }: CalendarProps) {
   const [activeMonth, setActiveMonth] = useState(() => new Date());
 
-  const events = createMonthEvents();
   const calendarDays = useMemo(() => createCalendarDays(activeMonth, events), [activeMonth, events]);
 
   const monthLabel = activeMonth.toLocaleDateString("en-US", {
@@ -112,6 +77,7 @@ export default function Calendar({ addActivity }: CalendarProps) {
   });
 
   function changeMonth(monthOffset: number) {
+    monthUpdated(new Date(activeMonth.getFullYear(), activeMonth.getMonth() + monthOffset , 1))
     setActiveMonth((currentMonth) => {
       const nextMonth = new Date(currentMonth);
       nextMonth.setMonth(currentMonth.getMonth() + monthOffset);
@@ -119,15 +85,17 @@ export default function Calendar({ addActivity }: CalendarProps) {
     });
   }
 
-  function handleDateClick(date: Date) {
-    addActivity(date)
-    console.log({
-      date,
-      day: date.getDate(),
-      month: date.getMonth() + 1,
-      year: date.getFullYear(),
-      isoDate: date.toISOString(),
-    });
+  function handleDateClick(date: Date, isCurrentMonth: boolean, events: CalendarEvent[]) {    
+    if (!isCurrentMonth) {
+      setActiveMonth(new Date(date.getFullYear(), date.getMonth(), 1));
+      monthUpdated(new Date(date.getFullYear(), date.getMonth(), 1))
+      return;
+    }
+    if (events.length) {
+      viewDay(date)
+    } else {
+      addActivity(date)
+    }
   }
 
   return (
@@ -180,7 +148,7 @@ export default function Calendar({ addActivity }: CalendarProps) {
             type="button"
             key={toDateKey(day.date)}
             className="min-h-24 border-r border-b border-slate-200 bg-white px-1.5 py-2 text-left transition-colors hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-400 [&:nth-child(7n)]:border-r-0"
-            onClick={() => handleDateClick(day.date)}
+            onClick={() => handleDateClick(day.date, day.isCurrentMonth, day.events)}
           >
             <span
               className={`block text-center text-sm ${

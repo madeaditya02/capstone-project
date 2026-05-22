@@ -1,7 +1,7 @@
 import { CiCalendar } from "react-icons/ci";
 import type { History } from "../../utils/types";
-import StatIcon from "../StatIcon";
 import StressBadge from "../StressBadge";
+import ActivityMetric from "./ActivityMetric";
 
 export default function ActivityCard({ history }: {history: History}) {
   return (
@@ -32,13 +32,7 @@ export default function ActivityCard({ history }: {history: History}) {
 
       <div className="mt-5 grid grid-cols-2 gap-5 lg:grid-cols-3">
         {history.details.map((detail) => (
-          <div key={detail.label} className="flex items-start gap-3">
-            <StatIcon attr={detail.label} />
-            <div>
-              <p className="text-xs text-slate-500">{detail.label}</p>
-              <p className="text-sm font-bold text-slate-800">{detail.value}</p>
-            </div>
-          </div>
+          <ActivityMetric label={detail.label} value={detail.value} />
         ))}
       </div>
     </article>

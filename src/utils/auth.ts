@@ -1,17 +1,5 @@
 import api from "./api";
-
-export type AuthUser = {
-  id: number;
-  name: string;
-  emailAddress: string;
-  birthDate: string | null;
-  gender: string | null;
-  job: string | null;
-  workLocation: string | null;
-  hobby: string | null;
-  createdAt: string;
-  updatedAt: string;
-};
+import type { User } from "./types";
 
 type ApiResponse<T> = {
   message: string;
@@ -24,7 +12,7 @@ type LoginPayload = {
 };
 
 type LoginResult = {
-  user: AuthUser;
+  user: User;
   token: string;
 };
 
@@ -43,7 +31,7 @@ export function getStoredUser() {
   }
 
   try {
-    return JSON.parse(user) as AuthUser;
+    return JSON.parse(user) as User;
   } catch {
     clearAuthSession();
     return null;
@@ -70,7 +58,7 @@ export async function login(payload: LoginPayload) {
 }
 
 export async function getCurrentUser() {
-  const response = await api.get<ApiResponse<AuthUser>>("/users/me");
+  const response = await api.get<ApiResponse<User>>("/users/me");
   const user = response.data.data;
   const token = getToken();
 

@@ -4,36 +4,17 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import { useState } from "react";
 import useInput from "../hooks/useInput";
-import type { Socials } from "../utils/types";
+import type { LoaderData, Socials } from "../utils/types";
 import SocialSummaryCard from "../components/social/SocialSummaryCard";
 import FriendCard from "../components/social/FriendCard";
 import PageHeadline from "../components/PageHeadline";
-
-const socials: Socials = {
-  summary: [
-    { label: 'Total Friends', value: 5 },
-    { label: 'Refreshed', value: 5 },
-    { label: 'Near-Burnout', value: 5 },
-  ],
-  friends: [
-    {
-      name: "Sarah Johnson",
-      status: "Refreshed",
-      time: "2 hours ago",
-      stressLevel: 25,
-    },
-    {
-      name: "Michael Chen",
-      status: "Strained",
-      time: "30 minutes ago",
-      stressLevel: 65,
-    },
-  ]
-}
+import { useLoaderData } from "react-router";
 
 export default function Social() {
+  const { data: socials } = useLoaderData() as LoaderData<Socials>;
   const [openNewFriend, setOpenNewFriend] = useState(false)
   const [email, handlEemail] = useInput('');
+
   return (
     <>
       <div className="container max-w-4xl mx-auto mt-8">
@@ -49,7 +30,7 @@ export default function Social() {
         </div>
         <div className="list-friends mt-8 flex flex-col gap-4">
         {socials.friends.map((friend) => (
-          <FriendCard friend={friend} />
+          <FriendCard key={friend.id} friend={friend} />
         ))}
         </div>
       </div>

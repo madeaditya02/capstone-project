@@ -1,34 +1,11 @@
-import type { Histories } from "../utils/types";
 // import AverageCard from "../components/history/AverageCard";
+import { useLoaderData } from "react-router";
 import PageHeadline from "../components/PageHeadline";
 import MonthCard from "../components/history/MonthCard";
-
-const histories: Histories = {
-  summary: [
-    { label: 'Avg Exercise', value: '3.5h' },
-    { label: 'Avg Screen Time', value: '12.5h'},
-    { label: 'Avg Sleep Duration', value: '8.2h'},
-    { label: 'Avg Stress', value: '82%'},
-  ],
-  history: [
-    {
-      date: "Sel, 28 Apr 2026",
-      title: "Daily Activity Log",
-      stressStatus: "Near-Burnout",
-      stressLevel: 82,
-      details: [
-        { label: "Screen Time", value: "9.2h" },
-        { label: "Device Before Sleep", value: "2h" },
-        { label: "Sleep Duration", value: "5.5h" },
-        { label: "Physical Activity", value: "0 min" },
-        { label: "Caffeine Intake", value: "4 cups" },
-        { label: "Mood", value: "😊 Anxious" },
-      ],
-    },
-  ]
-}
+import type { MonthData } from "../utils/types";
 
 export default function History() {
+  const { data: histories } = useLoaderData() as { data: MonthData[]};
   return (
     <div className="container max-w-4xl mx-auto mt-8 px-4">
       <div className="flex justify-between items-center gap-6">
@@ -41,8 +18,8 @@ export default function History() {
         ))}
       </div> */}
       <div className="histories mt-8 flex flex-col gap-4">
-        {histories.history.map(() => (
-          <MonthCard detailPath="/history/2026-04" />
+        {histories.map((month, i) => (
+          <MonthCard key={i} monthData={month} detailPath={`/history/${month.monthPath}`} />
         ))}
       </div>
     </div>

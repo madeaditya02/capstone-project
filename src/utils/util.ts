@@ -13,3 +13,8 @@ export function formatDate(date: Date): string {
   const day = date.getDate().toString().padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
+
+export function createDateFromRawDate(rawDate: string) {
+  const [year, month, date] = rawDate.split("-").map(Number);
+  return new Date(year, month - 1, date);
+}

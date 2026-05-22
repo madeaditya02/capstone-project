@@ -1,8 +1,9 @@
 import { useRouteLoaderData } from "react-router";
-import { getStoredUser, getToken, type AuthUser } from "../utils/auth";
+import { getStoredUser, getToken } from "../utils/auth";
+import type { User } from "../utils/types";
 
 type AuthLoaderData = {
-  user: AuthUser;
+  user: User;
 };
 
 export default function useAuth() {

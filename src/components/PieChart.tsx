@@ -7,57 +7,58 @@ import {
   type Plugin,
 } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import type { Stress } from "../utils/types";
 
 ChartJS.register(ArcElement, Tooltip);
 
-const chartData: ChartData<"doughnut"> = {
-  labels: ["Refreshed", "Strained", "Near-Burnout"],
-  datasets: [
-    {
-      data: [42, 28, 30],
-      backgroundColor: ["#d5f6eb", "#ffe3d0", "#ffc4c8"],
-      borderColor: "#ffffff",
-      borderWidth: 0,
-      hoverOffset: 4,
+
+export default function PieChart({ data }: { data: Record<Stress, number> }) {
+  const chartData: ChartData<"doughnut"> = {
+    labels: ["Refreshed", "Strained", "Near-Burnout"],
+    datasets: [
+      {
+        data: [data['Refreshed'], data['Strained'], data['Near-Burnout']],
+        backgroundColor: ["#d5f6eb", "#ffe3d0", "#ffc4c8"],
+        borderColor: "#ffffff",
+        borderWidth: 0,
+        hoverOffset: 4,
+      },
+    ],
+  };
+  
+  const chartOptions: ChartOptions<"doughnut"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: "74%",
+    plugins: {
+      tooltip: {
+        enabled: true,
+      },
     },
-  ],
-};
-
-const chartOptions: ChartOptions<"doughnut"> = {
-  responsive: true,
-  maintainAspectRatio: false,
-  cutout: "74%",
-  plugins: {
-    tooltip: {
-      enabled: true,
+  };
+  
+  const centerTextPlugin: Plugin<"doughnut"> = {
+    id: "centerText",
+    afterDraw(chart) {
+      const { ctx, chartArea } = chart;
+      const x = (chartArea.left + chartArea.right) / 2;
+      const y = (chartArea.top + chartArea.bottom) / 2;
+  
+      ctx.save();
+      ctx.fillStyle = "#1f2937";
+      ctx.font = "600 16px Poppins, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("Refreshed", x, y);
+      ctx.restore();
     },
-  },
-};
-
-const centerTextPlugin: Plugin<"doughnut"> = {
-  id: "centerText",
-  afterDraw(chart) {
-    const { ctx, chartArea } = chart;
-    const x = (chartArea.left + chartArea.right) / 2;
-    const y = (chartArea.top + chartArea.bottom) / 2;
-
-    ctx.save();
-    ctx.fillStyle = "#1f2937";
-    ctx.font = "600 16px Poppins, sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("Refreshed", x, y);
-    ctx.restore();
-  },
-};
-
-const legends = [
-  { label: "Refreshed", color: "bg-[#d5f6eb]" },
-  { label: "Strained", color: "bg-[#ffe3d0]" },
-  { label: "Near-Burnout", color: "bg-[#ffc4c8]" },
-];
-
-export default function PieChart() {
+  };
+  
+  const legends = [
+    { label: "Refreshed", color: "bg-[#d5f6eb]" },
+    { label: "Strained", color: "bg-[#ffe3d0]" },
+    { label: "Near-Burnout", color: "bg-[#ffc4c8]" },
+  ];
   return (
     <div className="flex items-center justify-between">
       <div className="space-y-3">
