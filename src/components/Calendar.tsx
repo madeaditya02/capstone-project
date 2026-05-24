@@ -147,7 +147,7 @@ export default function Calendar({ addActivity, monthUpdated, events, viewDay }:
           <button
             type="button"
             key={toDateKey(day.date)}
-            className="min-h-24 border-r border-b border-slate-200 bg-white px-1.5 py-2 text-left transition-colors hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-400 [&:nth-child(7n)]:border-r-0"
+            className="min-h-24 border-r border-b border-slate-200 bg-white px-1.5 py-2 text-left transition-colors hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-400 nth-[7n]:border-r-0"
             onClick={() => handleDateClick(day.date, day.isCurrentMonth, day.events)}
           >
             <span

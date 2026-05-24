@@ -6,11 +6,6 @@ type ApiResponse<T> = {
   data: T;
 };
 
-type LoginPayload = {
-  emailAddress: string;
-  password: string;
-};
-
 type LoginResult = {
   user: User;
   token: string;
@@ -46,15 +41,6 @@ export function setAuthSession({ token, user }: LoginResult) {
 export function clearAuthSession() {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(USER_KEY);
-}
-
-export async function login(payload: LoginPayload) {
-  const response = await api.post<ApiResponse<LoginResult>>("/auth/login", payload);
-  const auth = response.data.data;
-
-  setAuthSession(auth);
-
-  return auth;
 }
 
 export async function getCurrentUser() {

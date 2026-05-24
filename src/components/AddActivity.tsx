@@ -1,12 +1,12 @@
 import { useState } from "react";
 import Input from "./Input";
 import Modal from "./Modal";
-import useInput from "../hooks/useInput";
 import { formatDate } from "../utils/util";
 import { TbMoodSad } from "react-icons/tb";
 import { CgSmileNeutral } from "react-icons/cg";
 import { FaRegSmile } from "react-icons/fa";
 import Button from "./Button";
+import useFormInput from "../hooks/useFormInput";
 
 const getMoodColor = (value: number) => {
   const from = value <= 50 ? [255, 31, 15] : [229, 245, 0];
@@ -26,15 +26,18 @@ type AddActivityProp = {
 }
 
 export default function AddActivity({ definedDate, onClose }: AddActivityProp) {
-  const [date, handleDate] = useInput(definedDate ? formatDate(definedDate) : '');
-  const [screenTime, handleScreenTime] = useInput('');
-  const [workscreenTime, handleWorkScreenTime] = useInput('');
-  const [entertainscreenTime, handleEntertainScreenTime] = useInput('');
-  const [startSleepTime, handleStartSleepTime] = useInput('');
-  const [endSleepTime, handleEndSleepTime] = useInput('');
-  const [exerciseDuration, handleExerciseDuration] = useInput('');
-  const [sportType, handleSportType] = useInput('');
   const [mood, setMood] = useState(0);
+  const [form, handleInputChange] = useFormInput({
+    date: definedDate ? formatDate(definedDate) : '',
+    screenTime: '',
+    workScreenTime: '',
+    entertainScreenTime: '',
+    startSleepTime: '',
+    endSleepTime: '',
+    exerciseDuration: '',
+    sportType: '',
+    // mood: 0,
+  })
   const moodColor = getMoodColor(mood);
   const moodTrack =
     mood <= 50
@@ -46,41 +49,41 @@ export default function AddActivity({ definedDate, onClose }: AddActivityProp) {
       <form action="">
         <div className="mb-3">
           <label htmlFor="date">Date</label>
-          <Input type="date" id="date" value={date} onChange={handleDate} />
+          <Input type="date" id="date" value={form.date} onChange={handleInputChange} />
         </div>
         <div className="mb-3">
-          <label htmlFor="screen_time">Total Screen Time</label>
-          <Input type="time" id="screen_time" value={screenTime} onChange={handleScreenTime} />
+          <label htmlFor="screenTime">Total Screen Time</label>
+          <Input type="time" id="screenTime" value={form.screenTime} onChange={handleInputChange} />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="mb-3">
-            <label htmlFor="work_screen_time">Work Screen Time</label>
-            <Input type="time" id="work_screen_time" value={workscreenTime} onChange={handleWorkScreenTime} />
+            <label htmlFor="workScreenTime">Work Screen Time</label>
+            <Input type="time" id="workScreenTime" value={form.workScreenTime} onChange={handleInputChange} />
           </div>
           <div className="mb-3">
-            <label htmlFor="entertain_screen_time">Entertain Screen Time</label>
-            <Input type="time" id="entertain_screen_time" value={entertainscreenTime} onChange={handleEntertainScreenTime} />
+            <label htmlFor="entertainScreenTime">Entertain Screen Time</label>
+            <Input type="time" id="entertainScreenTime" value={form.entertainScreenTime} onChange={handleInputChange} />
           </div>
         </div>
         <div className="mb-3">
-          <label htmlFor="sleep_time">Work Screen Time</label>
+          <label htmlFor="startSleepTime">Work Screen Time</label>
           <div className="flex gap-3 items-center">
-              <Input type="time" id="sleep_time" value={startSleepTime} onChange={handleStartSleepTime} className="grow" />
+              <Input type="time" id="startSleepTime" value={form.startSleepTime} onChange={handleInputChange} className="grow" />
               <span className="font-medium">to</span>
-              <Input type="time" value={endSleepTime} onChange={handleEndSleepTime} className="grow" />
+              <Input type="time" id="endSleepTime" value={form.endSleepTime} onChange={handleInputChange} className="grow" />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="mb-3">
-            <label htmlFor="exercise">Exercise Duration</label>
-            <Input type="time" id="exercise" value={exerciseDuration} onChange={handleExerciseDuration} />
+            <label htmlFor="exerciseDuration">Exercise Duration</label>
+            <Input type="time" id="exerciseDuration" value={form.exerciseDuration} onChange={handleInputChange} />
           </div>
           <div className="mb-3">
-            <label htmlFor="sport_type">Type of Sport (Opsional)</label>
-            <Input type="time" id="sport_type" value={sportType} onChange={handleSportType} />
+            <label htmlFor="sportType">Type of Sport (Opsional)</label>
+            <Input type="time" id="sportType" value={form.sportType} onChange={handleInputChange} />
           </div>
         </div>
-        <div id="mood_input" className="mb-3">
+        <div className="mb-3">
           <label htmlFor="mood">Mood</label>
           <div className="mt-2">
             <div className="mb-2 flex items-center justify-between px-1">

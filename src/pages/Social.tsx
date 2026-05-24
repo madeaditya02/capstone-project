@@ -1,19 +1,16 @@
 import { FaPlus } from "react-icons/fa6";
-import Modal from "../components/Modal";
-import Input from "../components/Input";
 import Button from "../components/Button";
 import { useState } from "react";
-import useInput from "../hooks/useInput";
 import type { LoaderData, Socials } from "../utils/types";
 import SocialSummaryCard from "../components/social/SocialSummaryCard";
 import FriendCard from "../components/social/FriendCard";
 import PageHeadline from "../components/PageHeadline";
 import { useLoaderData } from "react-router";
+import AddFriend from "../components/social/AddFriend";
 
 export default function Social() {
   const { data: socials } = useLoaderData() as LoaderData<Socials>;
-  const [openNewFriend, setOpenNewFriend] = useState(false)
-  const [email, handlEemail] = useInput('');
+  const [openNewFriend, setOpenNewFriend] = useState(false);
 
   return (
     <>
@@ -35,17 +32,7 @@ export default function Social() {
         </div>
       </div>
       {openNewFriend && (
-      <Modal title="Add Friend" onClose={() => setOpenNewFriend(false)}>
-        <form action="">
-          <div className="mb-3">
-            <label htmlFor="email">Email</label>
-            <Input type="email" id="email" value={email} onChange={handlEemail} placeholder="example@gmail.com" />
-          </div>
-          <div className="flex justify-end">
-            <Button type="submit">Add Friend</Button>
-          </div>
-        </form>
-      </Modal>
+        <AddFriend onClose={() => setOpenNewFriend(false)} />
       )}
     </>
   );
