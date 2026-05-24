@@ -13,7 +13,7 @@ import Profile from "./pages/Profile";
 // import { clearAuthSession, getCurrentUser, getToken } from "./utils/auth";
 import { allHistory, detailHistory } from "./controller/historyController";
 import { dashboardLoader } from "./controller/dashboardController";
-import { allFriends } from "./controller/socialController";
+import { allFriends, friendDetail } from "./controller/socialController";
 
 async function authCheck() {
   // const token = getToken();
@@ -52,6 +52,7 @@ const router = createBrowserRouter([
       {
         path: "social/:username",
         Component: SocialDetail,
+        loader: friendDetail
       },
       {
         path: "history",
