@@ -3,10 +3,13 @@ import { Link, useNavigate } from "react-router";
 import { FaArrowLeft, FaArrowRight, FaCheck, FaRegIdCard, FaUser } from "react-icons/fa6";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
+import SelectWithOther from "../../components/SelectWithOther";
 import usePostForm from "../../hooks/usePostForm";
 import { setAuthSession } from "../../utils/auth";
 import type { User } from "../../utils/types";
 import useFormInput from "../../hooks/useFormInput";
+import Select from "../../components/Select";
+import FieldErrorMessage from "../../components/FieldErrorMessage";
 
 type RegisterForm = {
   name: string;
@@ -43,10 +46,39 @@ const steps = [
   },
 ];
 
+const jobOptions = [
+  { label: "Student", value: "Student" },
+  { label: "Software Developer", value: "Software Developer" },
+  { label: "Teacher", value: "Teacher" },
+  { label: "Healthcare Worker", value: "Healthcare Worker" },
+  { label: "Designer", value: "Designer" },
+  { label: "Entrepreneur", value: "Entrepreneur" },
+];
+
+const hobbyOptions = [
+  { label: "Reading", value: "Reading" },
+  { label: "Music", value: "Music" },
+  { label: "Sports", value: "Sports" },
+  { label: "Gaming", value: "Gaming" },
+  { label: "Cooking", value: "Cooking" },
+  { label: "Traveling", value: "Traveling" },
+];
+
+const genderOptions = [
+  { label: "Male", value: "male" },
+  { label: "Female", value: "female" },
+];
+
+const workLocationOptions = [
+  { label: "On Site", value: "on_site" },
+  { label: "Hybrid", value: "hybrid" },
+  { label: "Anywhere", value: "anywhere" },
+];
+
 export default function Register() {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
-  const [form, handleInputChange] = useFormInput<RegisterForm>({
+  const [form, handleInputChange, updateField] = useFormInput<RegisterForm>({
     name: "",
     username: "",
     emailAddress: "",
@@ -59,8 +91,9 @@ export default function Register() {
   });
   const { submit, loading, error } = usePostForm<RegisterForm, RegisterResponse>("/auth/register", {
     onSuccess: (response) => {
+      console.log(response.data);
       setAuthSession(response.data);
-      navigate("/", { replace: true });
+      navigate("/");
     },
   });
 
@@ -172,6 +205,7 @@ export default function Register() {
                     value={form.name}
                     onChange={handleInputChange}
                   />
+                  <FieldErrorMessage message={error?.getFieldError("name")} />
                 </div>
 
                 <div>
@@ -182,6 +216,7 @@ export default function Register() {
                     value={form.username}
                     onChange={handleInputChange}
                   />
+                  <FieldErrorMessage message={error?.getFieldError("username")} />
                 </div>
 
                 <div>
@@ -192,6 +227,7 @@ export default function Register() {
                     value={form.emailAddress}
                     onChange={handleInputChange}
                   />
+                  <FieldErrorMessage message={error?.getFieldError("emailAddress")} />
                 </div>
 
                 <div>
@@ -202,6 +238,7 @@ export default function Register() {
                     value={form.password}
                     onChange={handleInputChange}
                   />
+                  <FieldErrorMessage message={error?.getFieldError("password")} />
                 </div>
               </div>
             )}
@@ -217,59 +254,67 @@ export default function Register() {
                       value={form.birthDate}
                       onChange={handleInputChange}
                       />
+                    <FieldErrorMessage message={error?.getFieldError("birthDate")} />
                   </div>
 
                   <div>
                     <label htmlFor="gender">Gender</label>
-                    <select
+                    <Select
                       id="gender"
                       value={form.gender}
                       onChange={handleInputChange}
                       className="mt-1 block w-full rounded-md border border-black/50 px-3 py-2 text-black shadow-md focus:outline-primary-500"
-                    >
-                      <option value="">Select gender</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Prefer not to say">Prefer not to say</option>
-                    </select>
+                      options={genderOptions}
+                    />
+                    <FieldErrorMessage message={error?.getFieldError("gender")} />
                   </div>
                 </div>
 
                 <div>
                   <label htmlFor="job">Job</label>
-                  <Input
-                    type="text"
+                  <SelectWithOther
                     id="job"
                     value={form.job}
-                    onChange={handleInputChange}
+                    options={jobOptions}
+                    placeholder="Select job"
+                    otherLabel="Other"
+                    otherPlaceholder="Type your job"
+                    onValueChange={updateField}
                   />
+                  <FieldErrorMessage message={error?.getFieldError("job")} />
                 </div>
 
                 <div>
                   <label htmlFor="workLocation">Work location</label>
-                  <Input
-                    type="text"
+                  <Select
                     id="workLocation"
                     value={form.workLocation}
                     onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border border-black/50 px-3 py-2 text-black shadow-md focus:outline-primary-500"
+                    options={workLocationOptions}
                   />
+                  <FieldErrorMessage message={error?.getFieldError("workLocation")} />
                 </div>
 
                 <div>
                   <label htmlFor="hobby">Hobby</label>
-                  <Input
-                    type="text"
+                  <SelectWithOther
                     id="hobby"
                     value={form.hobby}
-                    onChange={handleInputChange}
+                    options={hobbyOptions}
+                    placeholder="Select hobby"
+                    otherLabel="Other"
+                    otherPlaceholder="Type your hobby"
+                    onValueChange={updateField}
                   />
+                  <FieldErrorMessage message={error?.getFieldError("hobby")} />
                 </div>
               </div>
             )}
 
-            {(error) && (
+            {(error && error.errors.length === 0) && (
               <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
-                {error}
+                {error.message}
               </p>
             )}
 

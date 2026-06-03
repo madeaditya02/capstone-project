@@ -9,7 +9,7 @@ export async function allHistory() {
       month: "Apr 2026",
       monthPath: "2026-04",
       recordedDays: 6,
-      stressStatus: "Refreshed",
+      stressStatus: "Relaxed",
       averageStress: "56%",
       metrics: [
         {
@@ -56,7 +56,7 @@ export async function detailHistory({ params }: LoaderFunctionArgs) {
         date: "Sel, 28 Apr 2026",
         dateRaw: "2026-04-28",
         title: "Daily Activity Log",
-        stressStatus: "Near-Burnout",
+        stressStatus: "Exhausted",
         stressLevel: 82,
         details: [
           { label: "Screen Time", value: "9.2h" },

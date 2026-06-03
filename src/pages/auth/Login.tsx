@@ -88,7 +88,7 @@ export default function Login() {
               <span>Remember Me</span>
             </label> */}
 
-            {error && <p className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
+            {error && <p className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error.message}</p>}
 
             <Button type="submit" className="w-full justify-center disabled:cursor-not-allowed disabled:opacity-70" disabled={loading}>
               {loading ? "Logging in..." : "Log in"}

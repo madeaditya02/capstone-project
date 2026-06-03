@@ -1,9 +1,9 @@
 import type { Stress } from "../utils/types";
 
 const accents: Record<Stress, string> = {
-  'Refreshed': 'bg-emerald-500',
-  'Strained': 'bg-amber-500',
-  'Near-Burnout': 'bg-rose-500',
+  'Relaxed': 'bg-emerald-500',
+  'Normal': 'bg-amber-500',
+  'Exhausted': 'bg-rose-500',
 }
 
 export default function StressProgress({ label, stressLevel }: { label: Stress, stressLevel: number } ) {

@@ -14,10 +14,10 @@ ChartJS.register(ArcElement, Tooltip);
 
 export default function PieChart({ data }: { data: Record<Stress, number> }) {
   const chartData: ChartData<"doughnut"> = {
-    labels: ["Refreshed", "Strained", "Near-Burnout"],
+    labels: ["Relaxed", "Normal", "Exhausted"],
     datasets: [
       {
-        data: [data['Refreshed'], data['Strained'], data['Near-Burnout']],
+        data: [data['Relaxed'], data['Normal'], data['Exhausted']],
         backgroundColor: ["#d5f6eb", "#ffe3d0", "#ffc4c8"],
         borderColor: "#ffffff",
         borderWidth: 0,
@@ -49,15 +49,17 @@ export default function PieChart({ data }: { data: Record<Stress, number> }) {
       ctx.font = "600 16px Poppins, sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("Refreshed", x, y);
+      // Fill text with max stress level
+      const maxStress = Object.values(data).reduce((max, current) => Math.max(max, current), 0);
+      ctx.fillText(maxStress === data['Relaxed'] ? "Relaxed" : maxStress === data['Normal'] ? "Normal" : "Exhausted", x, y);
       ctx.restore();
     },
   };
   
   const legends = [
-    { label: "Refreshed", color: "bg-[#d5f6eb]" },
-    { label: "Strained", color: "bg-[#ffe3d0]" },
-    { label: "Near-Burnout", color: "bg-[#ffc4c8]" },
+    { label: "Relaxed", color: "bg-[#d5f6eb]" },
+    { label: "Normal", color: "bg-[#ffe3d0]" },
+    { label: "Exhausted", color: "bg-[#ffc4c8]" },
   ];
   return (
     <div className="flex items-center justify-between">

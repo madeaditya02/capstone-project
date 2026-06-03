@@ -1,6 +1,6 @@
 import type { Metric } from "../components/history/MonthCard";
 
-export type Stress = 'Refreshed' | 'Strained' | 'Near-Burnout';
+export type Stress = 'Relaxed' | 'Normal' | 'Exhausted';
 
 export interface Stat {
   'Screen Time': number,
@@ -47,7 +47,7 @@ export interface Friend {
 
 export interface Socials {
   'summary': {
-    label: 'Total Friends' | 'Refreshed' | 'Near-Burnout',
+    label: 'Total Friends' | 'Relaxed' | 'Exhausted',
     value: number
   }[],
   'friends': Friend[]

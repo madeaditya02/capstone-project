@@ -5,8 +5,8 @@ export async function allFriends() {
   const socials: Socials = {
     summary: [
       { label: 'Total Friends', value: 5 },
-      { label: 'Refreshed', value: 5 },
-      { label: 'Near-Burnout', value: 5 },
+      { label: 'Relaxed', value: 5 },
+      { label: 'Exhausted', value: 5 },
     ],
     friends: [
       {
@@ -14,7 +14,7 @@ export async function allFriends() {
         emailAddress: "sarah@gmail.com",
         name: "Sarah Johnson",
         username: "sarahjohnson",
-        status: "Refreshed",
+        status: "Relaxed",
         time: "2 hours ago",
         stressLevel: 25,
       },
@@ -23,7 +23,7 @@ export async function allFriends() {
         name: "Michael Chen",
         emailAddress: "michael@gmail.com",
         username: "michaelchen",
-        status: "Strained",
+        status: "Normal",
         time: "30 minutes ago",
         stressLevel: 65,
       },
@@ -41,7 +41,7 @@ export async function friendDetail({ params }: LoaderFunctionArgs) {
       name: "Sarah Johnson",
       username: username ?? "",
       emailAddress: "sarah@gmail.com",
-      status: "Refreshed",
+      status: "Relaxed",
       time: "2 hours ago",
       stressLevel: 25,
       job: "Product Designer",
@@ -62,7 +62,7 @@ export async function friendDetail({ params }: LoaderFunctionArgs) {
           date: "Sel, 28 Apr 2026",
           dateRaw: "2026-04-28",
           title: "Daily Activity Log",
-          stressStatus: "Refreshed",
+          stressStatus: "Relaxed",
           stressLevel: 24,
           details: [
             { label: "Screen Time", value: "5.4h" },
@@ -77,7 +77,7 @@ export async function friendDetail({ params }: LoaderFunctionArgs) {
           date: "Sen, 27 Apr 2026",
           dateRaw: "2026-04-27",
           title: "Daily Activity Log",
-          stressStatus: "Refreshed",
+          stressStatus: "Relaxed",
           stressLevel: 28,
           details: [
             { label: "Screen Time", value: "6.1h" },

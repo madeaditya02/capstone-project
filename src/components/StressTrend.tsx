@@ -6,15 +6,15 @@ const badgeStyles: Record<Stress, {
   trendColor: string,
   icon: IconType
 }> = {
-  'Refreshed': {
+  'Relaxed': {
     trendColor: 'text-emerald-500',
     icon: FaArrowTrendDown
   },
-  'Strained': {
+  'Normal': {
     trendColor: 'text-amber-500',
     icon: FaMinus
   },
-  'Near-Burnout': {
+  'Exhausted': {
     trendColor: 'text-rose-500',
     icon: FaArrowTrendUp
   },

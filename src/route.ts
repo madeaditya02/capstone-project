@@ -1,7 +1,9 @@
 import { createElement } from "react";
-import { createBrowserRouter, Outlet } from "react-router";
+import { createBrowserRouter, Outlet, redirect } from "react-router";
 import Social from "./pages/Social";
 import SocialDetail from "./pages/SocialDetail";
+import DetailSocialGroup from "./pages/DetailSocialGroup";
+import SocialGroups from "./pages/SocialGroups";
 import History from "./pages/History";
 import HistoryDetail from "./pages/HistoryDetail";
 import Login from "./pages/auth/Login";
@@ -10,26 +12,53 @@ import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
-// import { clearAuthSession, getCurrentUser, getToken } from "./utils/auth";
+import NotFound from "./pages/NotFound";
+import { clearAuthSession, getCurrentUser, getToken } from "./utils/auth";
 import { allHistory, detailHistory } from "./controller/historyController";
 import { dashboardLoader } from "./controller/dashboardController";
 import { allFriends, friendDetail } from "./controller/socialController";
+import { groupDetail } from "./controller/socialGroupController";
+import type { LoaderFunctionArgs } from "react-router";
 
 async function authCheck() {
-  // const token = getToken();
+  const token = getToken();
 
-  // if (!token) {
-  //   throw redirect("/auth");
-  // }
+  if (!token) {
+    throw redirect("/auth");
+  }
 
-  // try {
-  //   const user = await getCurrentUser();
+  try {
+    const user = await getCurrentUser();
 
-  //   return { user };
-  // } catch {
-  //   clearAuthSession();
-  //   throw redirect("/auth");
-  // }
+    return { user };
+  } catch {
+    clearAuthSession();
+    throw redirect("/auth");
+  }
+}
+
+async function guestCheck() {
+  const token = getToken();
+
+  if (token) {
+    throw redirect("/");
+  }
+}
+
+async function socialProfileLoader(args: LoaderFunctionArgs) {
+  const username = args.params.username;
+
+  if (!username?.startsWith("@")) {
+    throw new Response("Not Found", { status: 404 });
+  }
+
+  return friendDetail({
+    ...args,
+    params: {
+      ...args.params,
+      username: username.slice(1),
+    },
+  });
 }
 
 const router = createBrowserRouter([
@@ -37,6 +66,7 @@ const router = createBrowserRouter([
     id: "root",
     path: "/",
     element: createElement(MainLayout, null, createElement(Outlet)),
+    errorElement: createElement(NotFound),
     loader: authCheck,
     children: [
       {
@@ -50,9 +80,13 @@ const router = createBrowserRouter([
         loader: allFriends
       },
       {
-        path: "social/:username",
-        Component: SocialDetail,
-        loader: friendDetail
+        path: "social/groups",
+        Component: SocialGroups,
+      },
+      {
+        path: "social/groups/:slug",
+        Component: DetailSocialGroup,
+        loader: groupDetail,
       },
       {
         path: "history",
@@ -68,11 +102,21 @@ const router = createBrowserRouter([
         path: "profile",
         Component: Profile,
       },
+      {
+        path: ":username",
+        Component: SocialDetail,
+        loader: socialProfileLoader
+      },
+      {
+        path: "*",
+        Component: NotFound,
+      },
     ],
   },
   {
     path: "/auth",
     element: createElement(AuthLayout, null, createElement(Outlet)),
+    loader: guestCheck,
     children: [
       {
         index: true,

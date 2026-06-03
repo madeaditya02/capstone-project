@@ -10,7 +10,7 @@ export default function useFormInput<T>(initialForm: T): [T, (event: React.Chang
       [field]: event.target.value,
     }));
   };
-  const updateField = () => (field: keyof T, value: string) => {
+  const updateField = (field: keyof T, value: string) => {
     setForm((currentForm) => ({
       ...currentForm,
       [field]: value,

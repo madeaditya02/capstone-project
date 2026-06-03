@@ -1,11 +1,18 @@
-export async function dashboardLoader() {
+import api from "../utils/api"
 
+export async function dashboardLoader() {
+  const { data: resData } = await api.get('/dashboard/stress-summary')
+  for (const key in resData.data.totals) {
+    if (Object.prototype.hasOwnProperty.call(resData.data.totals, key)) {
+      const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
+      resData.data.totals[capitalizedKey] = resData.data.totals[key];
+      delete resData.data.totals[key];
+    }
+  }
+  const { data: activities } = await api.get('/activities?period=monthly')
+  console.log(activities);
   const data = {
-    summary: {
-      "Refreshed": 42,
-      "Strained": 28,
-      "Near-Burnout": 40
-    },
+    summary: resData.data.totals,
     // history dalam satu bulan
     histories: [
       {

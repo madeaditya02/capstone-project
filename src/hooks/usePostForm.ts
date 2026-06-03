@@ -2,36 +2,50 @@ import { useState } from "react";
 import axios, { type AxiosRequestConfig } from "axios";
 import api from "../utils/api";
 
-type ApiErrorResponse = {
+export type FieldError = {
+  property: string;
+  message: string;
+};
+
+export type ApiErrorResponse = {
+  message: string;
+  errors: FieldError[];
+  getFieldError: (property: string) => string | undefined;
+};
+
+type RawApiErrorResponse = {
   message?: string;
-  errors?: Record<string, string[] | string>;
+  errors?: FieldError[];
 };
 
 type UsePostFormOptions<TResult> = {
   config?: AxiosRequestConfig;
   onSuccess?: (result: TResult) => void;
-  onError?: (error: string) => void;
+  onError?: (error?: ApiErrorResponse) => void;
 };
 
-function getErrorMessage(error: unknown) {
-  if (axios.isAxiosError<ApiErrorResponse>(error)) {
+function createErrorResponse(message: string, errors: FieldError[] = []): ApiErrorResponse {
+  return {
+    message,
+    errors,
+    getFieldError: (property: string) =>
+      errors.find((error) => error.property === property)?.message,
+  };
+}
+
+function getErrors(error: unknown): ApiErrorResponse {
+  if (axios.isAxiosError<RawApiErrorResponse>(error)) {
     const responseData = error.response?.data;
 
-    if (responseData?.message) {
-      return responseData.message;
-    }
-
-    if (responseData?.errors) {
-      const firstError = Object.values(responseData.errors)[0];
-      return Array.isArray(firstError) ? firstError[0] : firstError;
-    }
+    return createErrorResponse(
+      responseData?.message ?? error.message,
+      responseData?.errors ?? [],
+    );
   }
 
-  if (error instanceof Error) {
-    return error.message;
-  }
-
-  return "Something went wrong. Please try again.";
+  return createErrorResponse(
+    error instanceof Error ? error.message : "Something went wrong. Please try again.",
+  );
 }
 
 export default function usePostForm<TPayload, TResult = unknown>(
@@ -39,12 +53,12 @@ export default function usePostForm<TPayload, TResult = unknown>(
   options: UsePostFormOptions<TResult> = {},
 ) {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<ApiErrorResponse>();
   const [result, setResult] = useState<TResult | null>(null);
 
   async function submit(payload: TPayload) {
     setLoading(true);
-    setError("");
+    setError(undefined);
     setResult(null);
 
     try {
@@ -53,9 +67,9 @@ export default function usePostForm<TPayload, TResult = unknown>(
       options.onSuccess?.(response.data);
       return response.data;
     } catch (requestError) {
-      const message = getErrorMessage(requestError);
-      setError(message);
-      options.onError?.(message);
+      const errors = getErrors(requestError);
+      setError(errors);
+      options.onError?.(errors);
       return null;
     } finally {
       setLoading(false);
@@ -64,7 +78,7 @@ export default function usePostForm<TPayload, TResult = unknown>(
 
   function reset() {
     setLoading(false);
-    setError("");
+    setError(undefined);
     setResult(null);
   }
 

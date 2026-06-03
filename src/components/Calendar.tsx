@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
 import { FaArrowLeft, FaArrowRight, FaPlus } from "react-icons/fa6";
 import Button from "./Button";
+import type { Stress } from "../utils/types";
 
-export type MoodStatus = "Refreshed" | "Strained" | "Near-Burnout";
 
 export type CalendarEvent = {
   id: number;
-  title: MoodStatus;
+  title: Stress;
   start: Date;
   end: Date;
 };
@@ -19,10 +19,10 @@ type CalendarDay = {
 
 const dayLabels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-const statusStyles: Record<MoodStatus, string> = {
-  Refreshed: "bg-emerald-100 text-emerald-700",
-  Strained: "bg-yellow-100 text-yellow-700",
-  "Near-Burnout": "bg-rose-100 text-rose-700",
+const statusStyles: Record<Stress, string> = {
+  Relaxed: "bg-emerald-100 text-emerald-700",
+  Normal: "bg-yellow-100 text-yellow-700",
+  Exhausted: "bg-rose-100 text-rose-700",
 };
 
 function toDateKey(date: Date) {
